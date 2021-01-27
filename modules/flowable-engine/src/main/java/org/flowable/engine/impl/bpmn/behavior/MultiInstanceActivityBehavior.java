@@ -115,6 +115,7 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
     protected String collectionString;
     protected CollectionHandler collectionHandler;
     protected VariableAggregationDefinitions aggregations;
+    protected boolean asyncLeave = true;
     // default variable name for loop counter for inner instances (as described in the spec)
     protected String collectionElementIndexVariable = "loopCounter";
 
@@ -386,13 +387,20 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
     }
     
     public Integer getLoopVariable(DelegateExecution execution, String variableName) {
-        Object value = execution.getVariableLocal(variableName);
+        VariableInstance variable = getLoopVariableInstance(execution, variableName);
+        Object value = variable != null ? variable.getValue() : 0;
+        return (Integer) (value != null ? value : 0);
+    }
+
+    public VariableInstance getLoopVariableInstance(DelegateExecution execution, String variableName) {
+        VariableInstance variable = execution.getVariableInstanceLocal(variableName);
         DelegateExecution parent = execution.getParent();
-        while (value == null && parent != null) {
-            value = parent.getVariableLocal(variableName);
+        while (variable == null && parent != null) {
+            variable = parent.getVariableInstanceLocal(variableName);
             parent = parent.getParent();
         }
-        return (Integer) (value != null ? value : 0);
+
+        return variable;
     }
 
     // Helpers
@@ -679,6 +687,14 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
 
     public void setAggregations(VariableAggregationDefinitions aggregations) {
         this.aggregations = aggregations;
+    }
+
+    public boolean isAsyncLeave() {
+        return asyncLeave;
+    }
+
+    public void setAsyncLeave(boolean asyncLeave) {
+        this.asyncLeave = asyncLeave;
     }
 
     public String getCollectionElementIndexVariable() {

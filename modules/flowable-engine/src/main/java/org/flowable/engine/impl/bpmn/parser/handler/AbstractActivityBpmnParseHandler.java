@@ -86,6 +86,9 @@ public abstract class AbstractActivityBpmnParseHandler<T extends FlowNode> exten
         if (loopCharacteristics.getAggregations() != null) {
             miActivityBehavior.setAggregations(loopCharacteristics.getAggregations().clone());
         }
+
+        // flowable:asyncLeave
+        miActivityBehavior.setAsyncLeave(loopCharacteristics.isAsyncLeave());
     }
     
     protected MultiInstanceActivityBehavior createMultiInstanceActivityBehavior(Activity modelActivity, MultiInstanceLoopCharacteristics loopCharacteristics, BpmnParse bpmnParse) {

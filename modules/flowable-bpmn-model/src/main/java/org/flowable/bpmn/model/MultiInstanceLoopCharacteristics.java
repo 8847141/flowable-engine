@@ -25,6 +25,7 @@ public class MultiInstanceLoopCharacteristics extends BaseElement {
     protected String elementVariable;
     protected String elementIndexVariable;
     protected boolean sequential;
+    protected boolean asyncLeave = true;
 
     protected VariableAggregationDefinitions aggregations;
 
@@ -108,6 +109,14 @@ public class MultiInstanceLoopCharacteristics extends BaseElement {
         this.aggregations.getAggregations().add(aggregation);
     }
 
+    public boolean isAsyncLeave() {
+        return asyncLeave;
+    }
+
+    public void setAsyncLeave(boolean asyncLeave) {
+        this.asyncLeave = asyncLeave;
+    }
+
     @Override
     public MultiInstanceLoopCharacteristics clone() {
         MultiInstanceLoopCharacteristics clone = new MultiInstanceLoopCharacteristics();
@@ -126,6 +135,7 @@ public class MultiInstanceLoopCharacteristics extends BaseElement {
         setElementVariable(otherLoopCharacteristics.getElementVariable());
         setElementIndexVariable(otherLoopCharacteristics.getElementIndexVariable());
         setSequential(otherLoopCharacteristics.isSequential());
+        setAsyncLeave(otherLoopCharacteristics.isAsyncLeave());
 
         if (otherLoopCharacteristics.getAggregations() != null) {
             setAggregations(otherLoopCharacteristics.getAggregations().clone());
